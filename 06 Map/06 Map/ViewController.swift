@@ -12,7 +12,8 @@ import MapKit
 class ViewController: UIViewController, MKMapViewDelegate {
 
     @IBOutlet weak var map: MKMapView!
-    
+//    var annotationView: MKPinAnnotationView!
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -39,9 +40,9 @@ class ViewController: UIViewController, MKMapViewDelegate {
         
         map.addAnnotation(annotation)
         
-        var lp = UILongPressGestureRecognizer(target: self, action: "putPin:")
-        lp.minimumPressDuration = 2.0
-        map.addGestureRecognizer(lp)
+        var tap = UITapGestureRecognizer(target: self, action: "putPin:")
+        tap.numberOfTapsRequired = 1
+        map.addGestureRecognizer(tap)
     }
     
     func putPin(gesture: UIGestureRecognizer) {
@@ -63,10 +64,19 @@ class ViewController: UIViewController, MKMapViewDelegate {
     }
 
     func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView!{
-        var annotationView = MKPinAnnotationView()
-        annotationView.annotation = annotation
-        annotationView.animatesDrop = true
-        annotationView.canShowCallout = true
+ //       if annotationView == nil {
+            var annotationView = mapView.dequeueReusableAnnotationViewWithIdentifier("annotation") as? MKPinAnnotationView
+        if (annotationView != nil) {
+            annotationView!.annotation = annotation
+        } else {
+            annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "annotation")
+            annotationView!.annotation = annotation
+            annotationView!.animatesDrop = true
+            annotationView!.canShowCallout = true
+        }
+
+        
+ //       }
         return annotationView
     }
 
