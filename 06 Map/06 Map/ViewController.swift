@@ -40,20 +40,27 @@ class ViewController: UIViewController, MKMapViewDelegate {
         
         map.addAnnotation(annotation)
         
-        var tap = UITapGestureRecognizer(target: self, action: "putPin:")
+/*        var tap = UITapGestureRecognizer(target: self, action: "putPin:")
         tap.numberOfTapsRequired = 1
         map.addGestureRecognizer(tap)
+*/
+        var lp = UILongPressGestureRecognizer(target: self, action: "putPin:")
+        lp.minimumPressDuration = 2.0
+        map.addGestureRecognizer(lp)
     }
     
-    func putPin(gesture: UIGestureRecognizer) {
-        var touchPoint = gesture.locationInView(self.map)
-        var touchMap = map.convertPoint(touchPoint, toCoordinateFromView: map)
-        var newAnnotation = MKPointAnnotation()
-        newAnnotation.coordinate = touchMap
-        newAnnotation.title = "new place"
-        newAnnotation.subtitle = "playground"
-        
-        map.addAnnotation(newAnnotation)
+    func putPin(gesture: UILongPressGestureRecognizer) {
+        if gesture.state == UIGestureRecognizerState.Began {
+            var touchPoint = gesture.locationInView(self.map)
+            var touchMap = map.convertPoint(touchPoint, toCoordinateFromView: map)
+            var newAnnotation = MKPointAnnotation()
+            newAnnotation.coordinate = touchMap
+            newAnnotation.title = "new place"
+            newAnnotation.subtitle = "playground"
+            
+            map.addAnnotation(newAnnotation)
+        }
+
     }
 
     override func didReceiveMemoryWarning() {
